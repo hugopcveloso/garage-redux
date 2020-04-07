@@ -11,8 +11,26 @@ class CarNew extends Component {
     });
   }
 
+  render (props) {
 
-  render() {
+    const requiredField = (value) => {
+      value ? undefined : 'Required';
+    };
+
+    const licensePlate = (value) => {
+      value && /[A-Z]{2}-[A-Z]{2}-[A-Z]{2}/i.test(value) ? 'invalid plate' : undefined
+    };
+    const renderField = ({ input, label, type, placeholder, meta: { touched, error, warning } }) => (
+      <div>
+        <label>{label}</label>
+        <div>
+          <input {...input} placeholder={placeholder} type={type} className='form-control' />
+          {touched && ((error && <span>{error}</span>) || (warning && <span>{warning}</span>))}
+        </div>
+      </div>
+    );
+
+    const { submitting } = false;
     return [
       <div key="add" className="form-container car-form">
         <div id="page-title">
@@ -20,22 +38,50 @@ class CarNew extends Component {
         </div>
         <form onSubmit={this.props.handleSubmit(this.onSubmit)}>
           <div className="form-group">
-            <label htmlFor="InputBrand">Brand</label>
-            <Field name="brand" type="text" placeholder="Fiat" component="input" className="form-control" />
+            <Field
+              label="Brand"
+              name="brand"
+              type="text"
+              placeholder="Fiat"
+              component={renderField}
+              className="form-control"
+              validate={requiredField}
+
+            />
           </div>
           <div className="form-group">
-            <label htmlFor="InputModel">Model</label>
-            <Field name="model" type="text" placeholder="Fiat Punto" component="input" className="form-control" />
+            <Field
+              label="Model"
+              name="model"
+              type="text"
+              placeholder="Fiat Punto"
+              component={renderField}
+              className="form-control" />
           </div>
           <div className="form-group">
-            <label htmlFor="InputOwner">Owner</label>
-            <Field name="owner" type="text" placeholder="Cristiano Ronaldo" component="input" className="form-control" />
+            <Field
+              label="Owner"
+              name="owner"
+              type="text"
+              placeholder="Cristiano Ronaldo"
+              component={renderField}
+              className="form-control" />
           </div>
           <div className="form-group">
-            <label htmlFor="InputPlate">Plate</label>
-            <Field name="plate" type="text" placeholder="64-EX-23" component="input" className="form-control" />
+            <Field
+              label="Plate"
+              name="plate"
+              type="text"
+              validate={requiredField && licensePlate}
+              placeholder="64-EX-23"
+              component={renderField}
+              className="form-control" />
           </div>
-          <button type="submit btn btn-primary">Add car</button>
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={submitting}
+          >Add car</button>
         </form>
       </div>
     ];
